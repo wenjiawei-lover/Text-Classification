@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, recall_score, f1_score, classificati
 from tqdm import tqdm
 from torch.cuda.amp import autocast, GradScaler
 from plot_metrics import plot_metrics
-
+import matplotlib.pyplot as plt
 # 读取数据集的函数
 def load_data(file_path):
     data = pd.read_csv(file_path, header=None, sep='\t')
