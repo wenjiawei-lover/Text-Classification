@@ -64,6 +64,9 @@ python textclassification.py
 - 项目输出每个epoch的训练损失、验证损失、准确率、召回率和F1分数。
 - 训练结束后，打印测试损失、准确率、召回率和F1分数。
 - 为测试数据集生成分类报告，提供模型性能的详细分析。
+##数据
+![微信截图_20241209144315](https://github.com/user-attachments/assets/d186b58b-c332-4de4-ab63-94d5a99d54e4)
+![微信截图_20241209144330](https://github.com/user-attachments/assets/6466b451-fa11-46ce-9591-b6e0dd9b0ae3)
 
 ## 贡献
 欢迎通过点star，提交fork请求或在GitHub上开启问题来为这个项目贡献。
