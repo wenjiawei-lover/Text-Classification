@@ -10,14 +10,13 @@ from tqdm import tqdm
 from torch.cuda.amp import autocast, GradScaler
 from plot_metrics import plot_metrics
 import matplotlib.pyplot as plt
+from plot_metrics import plot_metrics
 # 读取数据集的函数
 def load_data(file_path):
     data = pd.read_csv(file_path, header=None, sep='\t')
     texts = data[1].values
     labels = data[0].values
     return texts, labels
-
-
 # 生成词云的函数
 def generate_wordcloud(texts):
     # 合并所有文本
@@ -32,9 +31,7 @@ def generate_wordcloud(texts):
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis('off')  # 关闭坐标轴
     plt.show()
-
-
-# 自定义数据集
+# 定义数据集
 class TextDataset(Dataset):
     def __init__(self, encodings, labels):
         self.encodings = encodings
@@ -42,13 +39,11 @@ class TextDataset(Dataset):
 
     def __getitem__(self, idx):
         item = {key: val[idx] for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.labels[idx])
+        item['labels'] = torch.tensor(self.labels[idx], dtype=torch.long)
         return item
 
     def __len__(self):
         return len(self.labels)
-
-
 # 使用中文BERT模型
 def create_model(num_classes):
     bert_model = BertModel.from_pretrained('E:\\project\\Text-Classification\\data')#请替换自己路径
@@ -93,7 +88,7 @@ def train(model, train_loader, optimizer, loss_fn, device, scaler):
 
         total_loss += loss.item()
         progress_bar.set_postfix(loss=total_loss / (progress_bar.n + 1))  # 动态更新 loss
-    return total_loss / len(train_loader)
+    return total_loss / len(train_loader)#ai修改部分
 
 
 # 验证函数
@@ -155,9 +150,9 @@ def main():
     val_dataset = TextDataset(val_encodings, val_labels)
     test_dataset = TextDataset(test_encodings, test_labels)
 
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False, num_workers=4)
-    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, num_workers=8)
+    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False, num_workers=8)
+    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=8)
 
     # 创建模型和设备
     TextClassifier, device = create_model(num_classes)
@@ -217,7 +212,8 @@ def main():
 
     # 生成词云
     generate_wordcloud(train_texts)
-
+ # 在训练和验证完成后，调用 plot_metrics 绘制图表
+    plot_metrics(train_losses, val_losses, val_accuracies, val_recalls, val_f1s, list(range(1, 21)))
 
 # 运行训练和评估
 if __name__ == "__main__":
